@@ -15,7 +15,7 @@ class UserController {
         email: req.body.email,
         password: req.body.password,
       };
-      const user = new UserModel.create(userData);
+      const user = new UserModel(userData);
       await user.save();
     } catch (error) {}
   }

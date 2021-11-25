@@ -1,16 +1,14 @@
+import './core/config';
+import { createServer } from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import mongoose, { ConnectOptions } from 'mongoose';
+import { WebSocketServer } from 'ws';
+import { dbconnect } from 'core/mongoDB';
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/react-chat', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-} as ConnectOptions);
+dbconnect();
 
 app.use(bodyParser.json());
 app.use(
@@ -20,10 +18,14 @@ app.use(
 );
 app.use(cors());
 
-app.get('/', (_, res) => {
-  res.send('hello');
+const server = createServer(app);
+const wsServer = new WebSocketServer({ server });
+
+wsServer.on('connection', (ws, req) => {
+  console.log(req);
+  ws.send('hello');
 });
 
-app.listen(8001, () => {
+server.listen(8001, () => {
   console.log('Server start on PORT: 8001');
 });
