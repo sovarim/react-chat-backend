@@ -1,22 +1,27 @@
 import { Request, Response } from 'express';
 import { UserModel } from 'models';
 
-interface RequestBody {
+type RegisterBodyType = {
   username: string;
   email: string;
   password: string;
-}
+};
 
 class UserController {
-  async create(req: Request, res: Response) {
+  async register(req: Request, res: Response) {
     try {
-      const userData: RequestBody = {
+      const registerBody: RegisterBodyType = {
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
       };
-      const user = new UserModel(userData);
+      const user = new UserModel(registerBody);
       await user.save();
-    } catch (error) {}
+      res.json(user);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
 }
+
+export default new UserController();

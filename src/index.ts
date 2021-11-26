@@ -4,7 +4,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { WebSocketServer } from 'ws';
-import { dbconnect } from 'core/mongoDB';
+import { dbconnect } from 'core/database';
+import authRouter from 'routes/auth';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(
   }),
 );
 app.use(cors());
+app.use('/auth', authRouter);
 
 const server = createServer(app);
 const wsServer = new WebSocketServer({ server });

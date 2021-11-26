@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Document, model } from 'mongoose';
 
-interface IUser {
+interface IUser extends Document {
   username: string;
   email: string;
   password: string;
@@ -13,6 +13,7 @@ const UserSchema = new Schema<IUser>({
     type: String,
     required: true,
     unique: true,
+    min: [3, 'username must be at least 6 characters'],
   },
   email: {
     type: String,
@@ -28,6 +29,10 @@ const UserSchema = new Schema<IUser>({
     type: Date,
     default: new Date(),
   },
+});
+
+UserSchema.pre('save', (next) => {
+  next();
 });
 
 const UserModel = model<IUser>('User', UserSchema);
