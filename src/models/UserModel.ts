@@ -1,4 +1,5 @@
 import { Schema, Document, model } from 'mongoose';
+import { hashSync } from 'bcrypt';
 
 interface IUser extends Document {
   username: string;
@@ -13,7 +14,6 @@ const UserSchema = new Schema<IUser>({
     type: String,
     required: true,
     unique: true,
-    min: [3, 'username must be at least 6 characters'],
   },
   email: {
     type: String,
@@ -31,7 +31,8 @@ const UserSchema = new Schema<IUser>({
   },
 });
 
-UserSchema.pre('save', (next) => {
+UserSchema.pre<IUser>('save', function (next) {
+  this.password = hashSync(this.password, 10);
   next();
 });
 
