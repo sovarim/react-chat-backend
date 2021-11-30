@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { WebSocketServer } from 'ws';
 import { dbconnect } from 'core/database';
 import authRouter from 'routes/auth';
@@ -18,6 +19,7 @@ app.use(
   }),
 );
 app.use(cors());
+app.use(cookieParser());
 app.use('/auth', authRouter);
 
 const server = createServer(app);

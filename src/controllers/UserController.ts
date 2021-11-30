@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { check, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
 import { UserModel } from 'models';
 
 type RegisterBody = {
@@ -27,18 +28,45 @@ class UserController {
         password: req.body.password,
       };
 
-      const existUsername = await UserModel.findOne({ username: body.username });
-      if (existUsername) {
-        return res.status(400).json({ msg: 'Пользователь с таким именем уже существует!' });
-      }
+      const existUser = await UserModel.findOne({
+        $or: [{ username: body.username }, { email: body.email }],
+      });
 
-      const existEmail = await UserModel.findOne({ email: body.email });
-      if (existEmail) {
-        return res.status(400).json({ msg: 'Пользователь с таким email уже существует!' });
+      if (existUser) {
+        const existEmail: boolean = existUser.email === body.email;
+        const existUsername: boolean = existUser.username === body.username;
+
+        if (existEmail && existUsername) {
+          return res.status(400).json({ msg: 'email and username is existed' });
+        }
+
+        if (existEmail) {
+          return res.status(400).json({ msg: 'email is existed' });
+        }
+
+        return res.status(400).json({
+          msg: 'username is existed',
+        });
       }
 
       const user = await UserModel.create(body);
-      res.json(user);
+
+      const accessToken = jwt.sign(
+        {
+          data: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+          },
+        },
+        process.env.JWT_KEY as string,
+        {
+          expiresIn: process.env.ACCESS_EXPIRATION,
+          algorithm: 'HS256',
+        },
+      );
+      res.cookie('refreshToken', accessToken, { httpOnly: true });
+      res.status(200).json({ accessToken });
     } catch (error) {
       res.status(500).json(error);
     }

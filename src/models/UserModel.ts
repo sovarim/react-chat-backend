@@ -9,27 +9,32 @@ interface IUser extends Document {
   lastVisit?: Date;
 }
 
-const UserSchema = new Schema<IUser>({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
+const UserSchema = new Schema<IUser>(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    avatar: String,
+    lastVisit: {
+      type: Date,
+      default: new Date(),
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
+  {
+    timestamps: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  avatar: String,
-  lastVisit: {
-    type: Date,
-    default: new Date(),
-  },
-});
+);
 
 UserSchema.pre<IUser>('save', function (next) {
   this.password = hashSync(this.password, 10);
