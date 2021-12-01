@@ -23,7 +23,13 @@ app.use(cookieParser());
 app.use('/auth', authRouter);
 
 const server = createServer(app);
-const wsServer = new WebSocketServer({ server });
+const wsServer = new WebSocketServer({
+  server,
+  verifyClient: (info, done) => {
+    console.log(info);
+    done(true);
+  },
+});
 
 wsServer.on('connection', (ws, req) => {
   console.log(req);

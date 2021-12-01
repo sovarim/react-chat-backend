@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { check, validationResult } from 'express-validator';
-import { compareSync } from 'bcrypt';
 import { UserModel } from 'models';
 import TokenService from 'services/TokenService';
 
@@ -77,8 +76,7 @@ class UserController {
         return res.status(400).json({ msg: 'invalid username or password' });
       }
 
-      const isCorrectPassword = compareSync(body.password, user.password);
-      if (!isCorrectPassword) {
+      if (!user.isCorrectPassword(body.password)) {
         return res.status(400).json({ msg: 'invalid username or password' });
       }
 

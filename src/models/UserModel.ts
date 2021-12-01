@@ -1,5 +1,5 @@
 import { Schema, Document, model } from 'mongoose';
-import { hashSync } from 'bcrypt';
+import { hashSync, compareSync } from 'bcrypt';
 
 export interface IUser extends Document {
   username: string;
@@ -7,6 +7,10 @@ export interface IUser extends Document {
   password: string;
   avatar?: string;
   lastVisit?: Date;
+}
+
+interface IUserModel extends IUser {
+  isCorrectPassword(password: string): boolean;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -41,6 +45,10 @@ UserSchema.pre<IUser>('save', function (next) {
   next();
 });
 
-const UserModel = model<IUser>('User', UserSchema);
+UserSchema.methods.isCorrectPassword = function (password: string) {
+  return compareSync(password, this.password);
+};
+
+const UserModel = model<IUserModel>('User', UserSchema);
 
 export default UserModel;
