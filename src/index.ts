@@ -30,6 +30,6 @@ wsServer.on('connection', (ws, req) => {
   ws.send('hello');
 });
 
-server.listen(8001, () => {
-  console.log('Server start on PORT: 8001');
+server.listen(process.env.PORT, () => {
+  console.log(`Server runned on PORT: ${process.env.PORT}`);
 });

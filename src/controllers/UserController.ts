@@ -1,11 +1,17 @@
 import { Request, Response } from 'express';
 import { check, validationResult } from 'express-validator';
-import jwt from 'jsonwebtoken';
+import { compareSync } from 'bcrypt';
 import { UserModel } from 'models';
+import TokenService from 'services/TokenService';
 
 type RegisterBody = {
   username: string;
   email: string;
+  password: string;
+};
+
+type LoginBody = {
+  username: string;
   password: string;
 };
 
@@ -51,22 +57,35 @@ class UserController {
 
       const user = await UserModel.create(body);
 
-      const accessToken = jwt.sign(
-        {
-          data: {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-          },
-        },
-        process.env.JWT_KEY as string,
-        {
-          expiresIn: process.env.ACCESS_EXPIRATION,
-          algorithm: 'HS256',
-        },
-      );
-      res.cookie('refreshToken', accessToken, { httpOnly: true });
-      res.status(200).json({ accessToken });
+      const tokens = TokenService.generateUserTokens(user);
+
+      res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
+      res.status(200).json({ token: tokens.accessToken });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+  async login(req: Request, res: Response) {
+    try {
+      const body: LoginBody = {
+        username: req.body.username,
+        password: req.body.password,
+      };
+
+      const user = await UserModel.findOne({ username: body.username });
+      if (!user) {
+        return res.status(400).json({ msg: 'invalid username or password' });
+      }
+
+      const isCorrectPassword = compareSync(body.password, user.password);
+      if (!isCorrectPassword) {
+        return res.status(400).json({ msg: 'invalid username or password' });
+      }
+
+      const tokens = TokenService.generateUserTokens(user);
+
+      res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
+      res.status(200).json({ token: tokens.accessToken });
     } catch (error) {
       res.status(500).json(error);
     }

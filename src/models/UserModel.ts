@@ -1,7 +1,7 @@
 import { Schema, Document, model } from 'mongoose';
 import { hashSync } from 'bcrypt';
 
-interface IUser extends Document {
+export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
