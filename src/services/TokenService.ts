@@ -30,6 +30,15 @@ class TokenService {
       },
     );
   }
+
+  static verify(token: string): { decodedJwt: any; error: any } {
+    try {
+      const decodedJwt = jwt.verify(token, process.env.JWT_KEY as string);
+      return { decodedJwt, error: null };
+    } catch (error) {
+      return { decodedJwt: null, error };
+    }
+  }
 }
 
 export default TokenService;
