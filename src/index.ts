@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { WebSocketServer } from 'ws';
 import { dbconnect } from 'core/database';
 import authRouter from 'routes/auth';
+import URLParse from 'url-parse';
 
 const app = express();
 
@@ -25,14 +26,11 @@ app.use('/auth', authRouter);
 const server = createServer(app);
 const wsServer = new WebSocketServer({
   server,
-  verifyClient: (info, done) => {
-    console.log(info);
-    done(true);
-  },
 });
 
 wsServer.on('connection', (ws, req) => {
-  console.log(req);
+  const params = URLParse(req.url as string, true).query;
+
   ws.send('hello');
 });
 
