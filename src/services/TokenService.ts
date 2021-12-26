@@ -9,8 +9,8 @@ class TokenService {
       email: user.email,
     };
 
-    const accessToken: string = this.createToken(_user, process.env.ACCESS_EXPIRATION as string);
-    const refreshToken: string = this.createToken(_user, process.env.REFRESH_EXPIRATION as string);
+    const accessToken: string = this._createToken(_user, process.env.ACCESS_EXPIRATION as string);
+    const refreshToken: string = this._createToken(_user, process.env.REFRESH_EXPIRATION as string);
 
     return {
       accessToken,
@@ -18,7 +18,7 @@ class TokenService {
     };
   }
 
-  static createToken(data: {}, expiresIn: string) {
+  private static _createToken(data: {}, expiresIn: string) {
     return jwt.sign(
       {
         data,
