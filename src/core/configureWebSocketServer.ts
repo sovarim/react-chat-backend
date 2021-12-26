@@ -1,8 +1,9 @@
 import { WebSocketServer } from 'ws';
 import { Server } from 'http';
-import { IWsVerify, IWsClient, IRequest } from 'interfaces';
+import { IWsVerify } from 'interfaces';
 import URLParse from 'url-parse';
 import TokenService from 'services/TokenService';
+import WSRoute from 'routes/wsRoute';
 
 export default (server: Server) => {
   const wsServer = new WebSocketServer({
@@ -18,10 +19,5 @@ export default (server: Server) => {
       done(true);
     },
   });
-
-  wsServer.on('connection', (ws: IWsClient, req: IRequest) => {
-    ws.data = req.jwtData;
-    ws.token = req.token;
-    ws.send('hello');
-  });
+  new WSRoute(wsServer);
 };
