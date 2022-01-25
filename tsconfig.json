@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "allowJs": true,
     "noEmit": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "preserveConstEnums": true,
     "skipLibCheck": true,

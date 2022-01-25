@@ -15,7 +15,7 @@ type LoginBody = {
 };
 
 class UserController {
-  async register(req: Request, res: Response) {
+  static async register(req: Request, res: Response) {
     try {
       await check('username').isLength({ min: 3 }).run(req);
       await check('email').isEmail().run(req);
@@ -64,7 +64,7 @@ class UserController {
       res.status(500).json(error);
     }
   }
-  async login(req: Request, res: Response) {
+  static async login(req: Request, res: Response) {
     try {
       const body: LoginBody = {
         username: req.body.username,
@@ -90,4 +90,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+export default UserController;

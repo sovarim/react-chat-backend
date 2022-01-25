@@ -1,11 +1,9 @@
-import { Schema, Document, model, PopulatedDoc } from 'mongoose';
-import { IMessage } from './MessageModel';
-import { IUser } from './UserModel';
+import { Schema, Document, model, ObjectId } from 'mongoose';
 
-interface IChat extends Document {
-  users: PopulatedDoc<IUser>;
-  messages: PopulatedDoc<IMessage>;
-  lastMessage: PopulatedDoc<IMessage>;
+export interface IChat extends Document {
+  users: ObjectId[];
+  messages: ObjectId;
+  lastMessage: ObjectId;
 }
 
 const ChatSchema = new Schema<IChat>({
@@ -13,14 +11,17 @@ const ChatSchema = new Schema<IChat>({
     type: [Schema.Types.ObjectId],
     ref: 'User',
     required: true,
-    max: 2,
+    validate: (arr: []) => arr.length <= 2,
   },
-  messages: {
-    type: [Schema.Types.ObjectId],
-    ref: 'Message',
-  },
+
+  messages: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Message',
+    },
+  ],
   lastMessage: {
-    type: [Schema.Types.ObjectId],
+    type: Schema.Types.ObjectId,
     ref: 'Message',
   },
 });

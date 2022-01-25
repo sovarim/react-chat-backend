@@ -22,3 +22,21 @@ export interface IWsVerify {
   secure: boolean;
   req: IRequest;
 }
+
+export enum WsEvents {
+  createChat = 'create-chat',
+  message = 'message',
+}
+
+export interface ICreateChat {
+  event: WsEvents.createChat;
+  userId: string;
+}
+
+export interface IMessage {
+  event: WsEvents.message;
+  chatId: string;
+  text: string;
+}
+
+export type WsEventType = ICreateChat | IMessage;

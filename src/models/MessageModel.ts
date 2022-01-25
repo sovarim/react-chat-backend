@@ -1,8 +1,8 @@
-import { Schema, Document, model, PopulatedDoc } from 'mongoose';
-import { IUser } from './UserModel';
+import { Schema, Document, model, ObjectId } from 'mongoose';
 
 export interface IMessage extends Document {
-  user: PopulatedDoc<IUser>;
+  user: ObjectId;
+  chat: ObjectId;
   text: string;
 }
 
@@ -11,6 +11,11 @@ const MessageSchema = new Schema<IMessage>(
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      required: true,
+    },
+    chat: {
+      type: Schema.Types.ObjectId,
+      ref: 'Chat',
       required: true,
     },
     text: String,

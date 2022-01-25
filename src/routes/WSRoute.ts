@@ -1,19 +1,49 @@
-import { IWsClient, IRequest } from 'interfaces';
+import { IWsClient, IRequest, WsEvents, WsEventType } from 'interfaces';
 import { WebSocketServer } from 'ws';
+import ChatController from 'controllers/ChatController';
+import MessageController from 'controllers/MessageController';
 
 class WSRoute {
   private _wsServer: WebSocketServer;
 
   constructor(wsServer: WebSocketServer) {
     this._wsServer = wsServer;
-    this._createRoutes();
+    this._createEventListeners();
   }
 
-  private _createRoutes(): void {
+  private _createEventListeners(): void {
     this._wsServer.on('connection', (ws: IWsClient, req: IRequest) => {
       ws.data = req.jwtData;
       ws.token = req.token;
-      ws.send('hello');
+      ws.send('connection success');
+
+      ws.on('new-message', (id, data) => {
+        this._wsServer.clients.forEach((ws: IWsClient) => {
+          if (ws.data?.id === id) {
+            ws.send(
+              JSON.stringify({
+                event: 'new-message',
+                status: 'OK',
+                data,
+              }),
+            );
+          }
+        });
+      });
+
+      ws.on('message', (msg) => {
+        const _msg: WsEventType = JSON.parse(msg.toString());
+
+        switch (_msg.event) {
+          case WsEvents.createChat:
+            ChatController.create(ws, _msg.userId);
+            break;
+          case WsEvents.message:
+            MessageController.create(ws, _msg.chatId, _msg.text);
+          default:
+            break;
+        }
+      });
     });
   }
 }
