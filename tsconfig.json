@@ -8,7 +8,7 @@
     "allowJs": true,
     "noEmit": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "preserveConstEnums": true,
     "skipLibCheck": true,
     "strict": true,

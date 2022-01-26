@@ -17,6 +17,10 @@ export interface IWsClient extends WebSocket {
   token: string;
 }
 
+export interface IWsClients {
+  [key: string]: IWsClient[];
+}
+
 export interface IWsVerify {
   origin: string;
   secure: boolean;

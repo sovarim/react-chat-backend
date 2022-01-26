@@ -1,11 +1,11 @@
-import { IWsClient } from 'interfaces';
+import { IWsClient, IWsClients } from 'interfaces';
 import ChatModel from 'models/ChatModel';
 
 class ChatController {
-  static async create(ws: IWsClient, userId: string) {
+  static async create(ws: IWsClient, wsClients: IWsClients, userId: string) {
     try {
       //@ts-ignore
-      const existChat = await ChatModel.findOne({ users: { $nin: [ws.data.id, userId] } });
+      const existChat = await ChatModel.findOne({ users: { $eq: [ws.data.id, userId] } });
       if (existChat) {
         return ws.send(JSON.stringify({ status: 'EXIST', data: existChat }));
       }
