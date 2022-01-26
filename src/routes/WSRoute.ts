@@ -3,6 +3,8 @@ import { WebSocketServer } from 'ws';
 import ChatController from 'controllers/ChatController';
 import MessageController from 'controllers/MessageController';
 
+export const wsClients: Map<string, IWsClient> = new Map();
+
 class WSRoute {
   private _wsServer: WebSocketServer;
 
@@ -15,21 +17,8 @@ class WSRoute {
     this._wsServer.on('connection', (ws: IWsClient, req: IRequest) => {
       ws.data = req.jwtData;
       ws.token = req.token;
+      wsClients.set(ws.data.id, ws);
       ws.send('connection success');
-
-      ws.on('new-message', (id, data) => {
-        this._wsServer.clients.forEach((ws: IWsClient) => {
-          if (ws.data?.id === id) {
-            ws.send(
-              JSON.stringify({
-                event: 'new-message',
-                status: 'OK',
-                data,
-              }),
-            );
-          }
-        });
-      });
 
       ws.on('message', (msg) => {
         const _msg: WsEventType = JSON.parse(msg.toString());

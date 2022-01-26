@@ -8,13 +8,13 @@ export interface IJwt {
 }
 
 export interface IRequest extends IncomingMessage {
-  jwtData?: IJwt;
-  token?: string;
+  jwtData: IJwt;
+  token: string;
 }
 
 export interface IWsClient extends WebSocket {
-  data?: IJwt;
-  token?: string;
+  data: IJwt;
+  token: string;
 }
 
 export interface IWsVerify {

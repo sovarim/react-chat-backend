@@ -4,7 +4,8 @@ import ChatModel from 'models/ChatModel';
 class ChatController {
   static async create(ws: IWsClient, userId: string) {
     try {
-      const existChat = await ChatModel.findOne({ users: { $elemMatch: { $gte: userId } } });
+      //@ts-ignore
+      const existChat = await ChatModel.findOne({ users: { $nin: [ws.data.id, userId] } });
       if (existChat) {
         return ws.send(JSON.stringify({ status: 'EXIST', data: existChat }));
       }
