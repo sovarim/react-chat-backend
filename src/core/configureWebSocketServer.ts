@@ -3,7 +3,7 @@ import { Server } from 'http';
 import { IWsVerify } from 'interfaces';
 import URLParse from 'url-parse';
 import TokenService from 'services/TokenService';
-import WSRoute from 'routes/WSRoute';
+import WSRoute from 'routes/ws';
 
 export default (server: Server) => {
   const wsServer = new WebSocketServer({

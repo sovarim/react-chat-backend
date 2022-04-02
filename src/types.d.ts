@@ -1,5 +1,9 @@
-import * as ws from '@types/ws';
+import { IJwt } from './interfaces';
 
-declare namespace WebSocket {
-  export type WebSocket = { token?: string };
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IJwt;
+    }
+  }
 }

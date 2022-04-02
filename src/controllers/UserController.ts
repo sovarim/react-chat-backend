@@ -88,6 +88,20 @@ class UserController {
       res.status(500).json(error);
     }
   }
+  static async me(req: Request, res: Response) {
+    try {
+      //@ts-ignore
+      const user = await UserModel.findById(req.user?.id);
+      res.status(200).json({
+        _id: user?._id,
+        username: user?.username,
+        email: user?.email,
+        lastVisit: user?.lastVisit,
+      });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
 }
 
 export default UserController;
