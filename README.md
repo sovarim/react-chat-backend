@@ -1,0 +1,7 @@
+### ENV-EXAMPLE
+```
+MONGO_URI='mongodb://localhost:27017/react-chat'
+ACCESS_EXPIRATION='2h'
+REFRESH_EXPIRATION='7d'
+JWT_KEY='JWT_KEY'
+```
