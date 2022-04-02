@@ -11,9 +11,6 @@
     "es2021": true
   },
   "extends": [
-    "airbnb",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
@@ -23,7 +20,9 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "plugin:prettier/recommended",
     "prettier"
-  ]
+  ],
+  "rules": {
+    "prettier/prettier": "error"
+  }
 }

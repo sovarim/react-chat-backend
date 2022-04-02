@@ -6,7 +6,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_PATH=src nodemon ./src/index.ts"
+    "start": "cross-env NODE_PATH=src nodemon ./src/index.ts",
+    "lint": "yarn eslint . --ext .ts --max-warnings 0 --color",
+    "lint:fix": "yarn eslint . --ext .ts --fix --max-warnings 0 --color"
   },
   "dependencies": {
     "@types/url-parse": "^1.4.5",
@@ -35,7 +37,6 @@
     "@types/ws": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "airbnb": "^0.0.2",
     "eslint": "^8.12.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
