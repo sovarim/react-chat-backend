@@ -81,8 +81,10 @@ class UserController {
       }
 
       const tokens = TokenService.generateUserTokens(user);
-
-      res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
+      res.cookie('_chat-refresh', tokens.refreshToken, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
       res.status(200).json({ token: tokens.accessToken });
     } catch (error) {
       res.status(500).json(error);
