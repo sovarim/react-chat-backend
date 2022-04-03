@@ -7,7 +7,10 @@ class MessageController {
   static async create(ws: IWsClient, wsClients: IWsClients, chatId: string, text: string) {
     try {
       const message = await MessageModel.create({ user: ws.data?.id, chat: chatId, text: text });
-      const chat = await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message.id } });
+      const chat = await ChatModel.findByIdAndUpdate(chatId, {
+        $push: { messages: message.id },
+        lastMessage: message.id,
+      });
 
       const participantId = String(chat?.users.find((user) => String(user) !== ws.data?.id));
 
