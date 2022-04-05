@@ -49,6 +49,8 @@ UserSchema.methods.isCorrectPassword = function (password: string) {
   return compareSync(password, this.password);
 };
 
+UserSchema.index({ username: 'text' });
+
 const UserModel = model<IUserModel>('User', UserSchema);
 
 export default UserModel;

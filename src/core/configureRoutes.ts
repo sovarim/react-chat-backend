@@ -5,6 +5,7 @@ import { createServer } from 'http';
 import cookieParser from 'cookie-parser';
 import authRoute from 'routes/auth';
 import chatRoute from 'routes/chats';
+import userRoute from 'routes/users';
 import configureWebSocketServer from 'core/configureWebSocketServer';
 import TokenService from 'services/TokenService';
 
@@ -19,6 +20,7 @@ export default (app: Express) => {
   app.use(cookieParser());
   app.use('/auth', authRoute);
   app.use('/chats', chatRoute);
+  app.use('/users', userRoute);
 
   const server = createServer(app);
   configureWebSocketServer(server);

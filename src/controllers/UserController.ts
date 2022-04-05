@@ -93,13 +93,20 @@ class UserController {
   static async me(req: Request, res: Response) {
     try {
       //@ts-ignore
-      const user = await UserModel.findById(req.user?.id);
-      res.status(200).json({
-        _id: user?._id,
-        username: user?.username,
-        email: user?.email,
-        lastVisit: user?.lastVisit,
-      });
+      const user = await UserModel.findById(req.user?.id).select('-password');
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+  static async get(req: Request, res: Response) {
+    try {
+      const { search = '' } = req.query as { search?: string };
+      const users = await UserModel.find({
+        //@ts-ignore
+        $and: [{ username: new RegExp(search, 'i') }, { _id: { $ne: req.user?.id } }],
+      }).select('-parssword');
+      res.status(200).json(users);
     } catch (error) {
       res.status(500).json(error);
     }
