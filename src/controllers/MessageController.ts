@@ -15,9 +15,16 @@ class MessageController {
       const participantId = String(chat?.users.find((user) => String(user) !== ws.data?.id));
 
       ws.send(JSON.stringify({ status: 'OK', data: message }));
-      wsClients[participantId].forEach((wsClient) =>
-        wsClient.send(JSON.stringify({ event: 'message', data: message })),
-      );
+      if (wsClients[participantId]) {
+        wsClients[participantId].forEach((wsClient) =>
+          wsClient.send(JSON.stringify({ event: 'message', data: message })),
+        );
+      }
+      if (wsClients[ws.data?.id]) {
+        wsClients[ws.data?.id].forEach((wsClient) =>
+          wsClient.send(JSON.stringify({ event: 'message', data: message })),
+        );
+      }
     } catch (error) {
       ws.send(JSON.stringify({ status: 'ERROR', error }));
     }

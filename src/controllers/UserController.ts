@@ -92,7 +92,6 @@ class UserController {
   }
   static async me(req: Request, res: Response) {
     try {
-      //@ts-ignore
       const user = await UserModel.findById(req.user?.id).select('-password');
       res.status(200).json(user);
     } catch (error) {
@@ -103,7 +102,6 @@ class UserController {
     try {
       const { search = '' } = req.query as { search?: string };
       const users = await UserModel.find({
-        //@ts-ignore
         $and: [{ username: new RegExp(search, 'i') }, { _id: { $ne: req.user?.id } }],
       }).select('-parssword');
       res.status(200).json(users);

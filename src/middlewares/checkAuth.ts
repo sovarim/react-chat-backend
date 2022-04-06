@@ -18,7 +18,6 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   if (error) {
     return res.status(401).json({ msg: invalidMsg });
   }
-  //@ts-ignore
   req.user = decodedJwt.data;
   next();
 };

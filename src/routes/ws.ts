@@ -3,7 +3,7 @@ import { WebSocketServer } from 'ws';
 import ChatController from 'controllers/ChatController';
 import MessageController from 'controllers/MessageController';
 
-class WSRoute {
+class WS {
   private _wsServer: WebSocketServer;
   private _wsClients: IWsClients;
 
@@ -30,9 +30,6 @@ class WSRoute {
         const _msg: WsEventType = JSON.parse(msg.toString());
 
         switch (_msg.event) {
-          case WsEvents.createChat:
-            ChatController.create(ws, this._wsClients, _msg.userId);
-            break;
           case WsEvents.message:
             MessageController.create(ws, this._wsClients, _msg.chatId, _msg.text);
           default:
@@ -41,6 +38,9 @@ class WSRoute {
       });
     });
   }
+  public get clients() {
+    return this._wsClients;
+  }
 }
 
-export default WSRoute;
+export default WS;

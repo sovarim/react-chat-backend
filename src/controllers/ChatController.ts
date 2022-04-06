@@ -1,28 +1,31 @@
 import { Request, Response } from 'express';
 import { IWsClient, IWsClients } from 'interfaces';
 import ChatModel from 'models/ChatModel';
-
+import { ws } from 'core/configureWebSocketServer';
 class ChatController {
-  static async create(ws: IWsClient, _: IWsClients, userId: string) {
+  static async create(req: Request, res: Response) {
     try {
-      //@ts-ignore
-      const existChat = await ChatModel.findOne({ users: { $eq: [ws.data.id, userId] } });
-      console.log(ws.data.id, userId);
+      const { userId } = req.body as { userId: string };
+      const existChat = await ChatModel.findOne({ users: { $eq: [req.user.id, userId] } })
+        .select('-messages')
+        .populate('users', '-password')
+        .populate('lastMessage');
       if (existChat) {
-        return ws.send(JSON.stringify({ status: 'EXIST', data: existChat }));
+        return res.status(201).json(existChat);
       }
-      const chat = await ChatModel.create({ users: [ws.data?.id, userId] });
-      ws.send(JSON.stringify({ status: 'OK', data: chat }));
+      let chat = await ChatModel.create({ users: [req.user.id, userId] });
+      chat = await chat.populate('users', '-password');
+      return res.status(201).json(chat);
     } catch (error) {
-      ws.send(JSON.stringify({ status: 'ERROR', error }));
+      res.status(500).json(error);
     }
   }
   static async getChats(req: Request, res: Response) {
-    //@ts-ignore
-    console.log(req.user?.id);
     try {
-      //@ts-ignore
-      const chats = await ChatModel.find({ users: { $in: [req.user.id] } })
+      const chats = await ChatModel.find({
+        users: { $in: [req.user.id] },
+        messages: { $exists: true, $not: { $size: 0 } },
+      })
         .select('-messages')
         .populate('users', '-password')
         .populate('lastMessage');
