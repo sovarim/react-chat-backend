@@ -6,7 +6,9 @@ class ChatController {
   static async create(req: Request, res: Response) {
     try {
       const { userId } = req.body as { userId: string };
-      const existChat = await ChatModel.findOne({ users: { $eq: [req.user.id, userId] } })
+      const existChat = await ChatModel.findOne({
+        $or: [{ users: { $eq: [req.user.id, userId] } }, { users: { $eq: [userId, req.user.id] } }],
+      })
         .select('-messages')
         .populate('users', '-password')
         .populate('lastMessage');
@@ -31,6 +33,17 @@ class ChatController {
         .populate('lastMessage');
 
       res.status(200).json(chats);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+  static async get(req: Request, res: Response) {
+    try {
+      const params = req.params as { id: string };
+      const chat = await ChatModel.findById(params.id)
+        .populate('users', '-password')
+        .populate('lastMessage');
+      res.status(200).json(chat);
     } catch (error) {
       res.status(500).json(error);
     }
