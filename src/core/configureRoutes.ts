@@ -18,6 +18,7 @@ export default (app: Express) => {
   );
   app.use(cors());
   app.use(cookieParser());
+  app.get('/ss', (_, res) => res.send('Hello'));
   app.use('/auth', authRoute);
   app.use('/chats', chatRoute);
   app.use('/users', userRoute);
