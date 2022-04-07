@@ -42,15 +42,15 @@ class UserController {
         const existUsername: boolean = existUser.username === body.username;
 
         if (existEmail && existUsername) {
-          return res.status(400).json({ msg: 'email and username is existed' });
+          return res.status(400).json({ msg: 'Username and email already taken' });
         }
 
         if (existEmail) {
-          return res.status(400).json({ msg: 'email is existed' });
+          return res.status(400).json({ msg: 'The email is already taken' });
         }
 
         return res.status(400).json({
-          msg: 'username is existed',
+          msg: 'The username is already taken',
         });
       }
 

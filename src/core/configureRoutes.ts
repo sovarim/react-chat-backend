@@ -25,7 +25,7 @@ export default (app: Express) => {
   const server = createServer(app);
   configureWebSocketServer(server);
 
-  server.listen(process.env.PORT || 8001, () => {
+  server.listen(process.env.PORT || 5000, () => {
     console.log(`Server runned on PORT: ${process.env.PORT || 8001}`);
   });
 };
