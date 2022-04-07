@@ -26,9 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.13",
     "url-parse": "^1.5.3",
-    "ws": "^8.2.3"
-  },
-  "devDependencies": {
+    "ws": "^8.2.3",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
@@ -49,4 +47,5 @@
     "ts-node": "^10.4.0",
     "typescript": "^4.5.2"
   }
+ 
 }
